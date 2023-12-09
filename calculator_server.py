@@ -14,24 +14,24 @@ class CalculatorServer:
         self.host = host
         self.port = port
         self.socket = None
-        
+
     def start(self):
         # Start the server
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.bind((self.host, self.port))
-        
+
         self.socket.listen(1)
         print(f'Listening on port {self.port}')
         conn, addr = self.socket.accept() # Accept a connection
         print(f'Connection from {addr}')
-        
+
         while True:
             data = conn.recv(1024).decode('utf-8')
             print(f'Received data: {data}')
             result = self.calculate(data)
             conn.send(str(result).encode('utf-8'))
-            
-            
+
+
     def calculate(self, data: bytes) -> bytes:
         # ID: unsigned Int (4 bytes)
         # Operation: example -> "Summe", UTF-8 encoded
@@ -47,18 +47,17 @@ class CalculatorServer:
         number_list = []
         for i in range(numbers):
             number_list.append(struct.unpack('i', data[operation_buffer+5+i*4:operation_buffer+9+i*4]))
-        
+
         calc_result = 0
         if operation in self._calculation_functions:
             calc_result = self._calculation_functions[operation](number_list)
         else:
             raise Exception(f'Unknown operation: {operation}')
-        
+
         packed_result = struct.pack('i', message_id) + struct.pack('i', calc_result)
         return packed_result
-    
+
 if __name__ == '__main__':
     server = CalculatorServer(port=50000, host='127.0.0.1`')
     server.start()
 
-        
