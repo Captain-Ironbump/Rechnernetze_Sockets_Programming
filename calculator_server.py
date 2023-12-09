@@ -56,6 +56,9 @@ class CalculatorServer:
         
         packed_result = struct.pack('i', message_id) + struct.pack('i', calc_result)
         return packed_result
-
+    
+if __name__ == '__main__':
+    server = CalculatorServer(port=50000, host='127.0.0.1`')
+    server.start()
 
         
