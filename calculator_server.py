@@ -114,6 +114,6 @@ if __name__ == '__main__':
         print(f'Example: {sys.argv[0]} 127.0.0.1 50000')
         sys.exit(1)
     
-    server = CalculatorServer(host=str(sys.argv[1]), port=int(sys.argv[1]))
+    server = CalculatorServer(host=str(sys.argv[1]), port=int(sys.argv[2]))
     server.start_tcp()
     server.start_udp()

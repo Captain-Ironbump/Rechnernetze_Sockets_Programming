@@ -61,7 +61,7 @@ if __name__ == '__main__':
         print(f'Example: {sys.argv[0]} 127.0.0.1 50000')
         sys.exit(1)
     
-    client = CalculatorClient(host=str(sys.argv[1]), port=int(sys.argv[1]))
+    client = CalculatorClient(host=str(sys.argv[1]), port=int(sys.argv[2]))
     client.connect_tcp()
     client.send_calculation(operation='Summe', numbers=[1, 2, 3, 4, 5])
     client.send_calculation(operation='Produkt', numbers=[1, 2, 3, 4, 5])
