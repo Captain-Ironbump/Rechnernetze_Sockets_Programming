@@ -3,7 +3,7 @@ import struct
 import calculator
 
 class CalculatorServer:
-    def __init__(self, port, host) -> None:
+    def __init__(self, host, port) -> None:
         self._calc = calculator.Calculator()
         self._calculation_functions = {
             b'Summe': lambda x: self._calc.summation(x),
@@ -58,6 +58,6 @@ class CalculatorServer:
         return packed_result
 
 if __name__ == '__main__':
-    server = CalculatorServer(port=50000, host='127.0.0.1`')
+    server = CalculatorServer(host='127.0.0.1', port=50000)
     server.start()
 
