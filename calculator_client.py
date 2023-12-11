@@ -1,5 +1,6 @@
 import socket
 import struct
+import sys
 
 class CalculatorClient:
     def __init__(self, host, port) -> None:
@@ -54,6 +55,13 @@ class CalculatorClient:
             return result
         
 if __name__ == '__main__':
+    
+    if len(sys.argv) != 3:
+        print(f'Usage: {sys.argv[0]} <host> <port>')
+        sys.exit(1)
+    
+    server = CalculatorClient(host=str(sys.argv[1]), port=int(sys.argv[1]))
+    
     client = CalculatorClient(host='127.0.0.1', port=50000)
     client.connect_tcp()
     client.send_calculation(operation='Summe', numbers=[1, 2, 3, 4, 5])

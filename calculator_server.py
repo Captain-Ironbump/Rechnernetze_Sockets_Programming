@@ -2,6 +2,7 @@ import socket
 import struct
 import calculator
 import time
+import sys
 
 class CalculatorServer:
     def __init__(self, host, port) -> None:
@@ -107,6 +108,11 @@ class CalculatorServer:
         return packed_result
 
 if __name__ == '__main__':
-    server = CalculatorServer(host='127.0.0.1', port=50000)
+    
+    if len(sys.argv) != 3:
+        print(f'Usage: {sys.argv[0]} <host> <port>')
+        sys.exit(1)
+    
+    server = CalculatorServer(host=str(sys.argv[1]), port=int(sys.argv[1]))
     server.start_tcp()
     server.start_udp()
