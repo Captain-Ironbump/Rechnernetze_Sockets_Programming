@@ -1,6 +1,7 @@
 import socket
 import struct
 import calculator
+import time
 
 class CalculatorServer:
     def __init__(self, host, port) -> None:
@@ -19,22 +20,22 @@ class CalculatorServer:
         }
         self.host = host
         self.port = port
-        self.socket = None
+        self.tcp_socket = None
+        self.udp_socket = None
 
-    def start(self):
+    def start_tcp(self):
         # Start the server
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind((self.host, self.port))
+        self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.tcp_socket.bind((self.host, self.port))
 
-        self.socket.listen(1)
+        self.tcp_socket.listen(1)
         print(f'Listening on port {self.port}')
         
-        while True:
-            conn, addr = self.socket.accept()  # Accept a connection
-            print(f'Connection from {addr}')
+        conn, addr = self.tcp_socket.accept()  # Accept a connection
+        print(f'Connection from {addr}')
 
-            # Handle the connection in a separate function
-            self.handle_connection(conn)
+        # Handle the connection in a separate function
+        self.handle_connection(conn)
 
     def handle_connection(self, conn: socket.socket):
         try:
@@ -49,7 +50,29 @@ class CalculatorServer:
             print(f"Error handling connection: {e}")
         finally:
             conn.close()
+            
+    def start_udp(self):
+        # Start the server
+        self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.udp_socket.bind((self.host, self.port))
         
+        self.udp_socket.settimeout(10)
+        print(f'Listening on port {self.port}')
+
+        # Handle the connection in a separate function
+        self.handle_udp_connection()
+        
+    def handle_udp_connection(self):
+        t_end=time.time()+30 # Ende der Aktivitätsperiode
+        while time.time()<t_end:
+            try:
+                data, addr = self.udp_socket.recvfrom(1024)
+                print(f'Received data: {data}')
+                result = self.calculate(data)
+                self.udp_socket.sendto(result, addr)
+            except socket.timeout:
+                print('Socket timed out at',time.asctime())
+        self.udp_socket.close()
 
     def calculate(self, data: bytes) -> bytes:
         # ID: unsigned Int (4 bytes)
@@ -85,5 +108,5 @@ class CalculatorServer:
 
 if __name__ == '__main__':
     server = CalculatorServer(host='127.0.0.1', port=50000)
-    server.start()
-
+    server.start_tcp()
+    server.start_udp()
