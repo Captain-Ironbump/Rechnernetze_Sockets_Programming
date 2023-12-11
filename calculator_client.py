@@ -58,6 +58,7 @@ if __name__ == '__main__':
     
     if len(sys.argv) != 3:
         print(f'Usage: {sys.argv[0]} <host> <port>')
+        print(f'Example: {sys.argv[0]} 127.0.0.1 50000')
         sys.exit(1)
     
     client = CalculatorClient(host=str(sys.argv[1]), port=int(sys.argv[1]))
