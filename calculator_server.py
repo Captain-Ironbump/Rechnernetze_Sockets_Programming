@@ -30,7 +30,7 @@ class CalculatorServer:
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.tcp_socket.bind((self.host, self.port))
 
-        self.tcp_socket.listen(1)
+        self.tcp_socket.listen(2)
         print(f'Listening on port {self.port}')
         
         while True:
@@ -63,11 +63,14 @@ class CalculatorServer:
         print(f'Listening on port {self.port}')
 
         while True:
-            data, addr = self.udp_socket.recvfrom(1024)
-            print(f'Connection from {addr}')
-            thread = threading.Thread(target=self.handle_udp_connection, args=(data, addr))
-            thread.start()
-        
+            try:
+                data, addr = self.udp_socket.recvfrom(1024)
+                print(f'Connection from {addr}')
+                thread = threading.Thread(target=self.handle_udp_connection, args=(data, addr))
+                thread.start()
+            except socket.timeout:
+                print('Socket timed in start_udp out at',time.asctime())
+                
         
     def handle_udp_connection(self, data: bytes, addr: tuple[str, int]):
         # t_end=time.time()+30 # Ende der Aktivitätsperiode
