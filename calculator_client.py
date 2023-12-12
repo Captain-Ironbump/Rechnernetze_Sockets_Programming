@@ -18,12 +18,12 @@ class CalculatorClient:
     def connect_tcp(self):
         # Connect to the server
         self.tcp_socket = socket.create_connection((self.host, self.port))
-        print('Connected to server')
+        print(f'Connected to server {self.tcp_socket.getsockname()[0]}:{self.tcp_socket.getsockname()[1]}')
         
     def create_udp(self):
         # Create a UDP socket
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        print('Created UDP socket')
+        print(f'Created UDP socket {self.udp_socket.getsockname()[0]}:{self.udp_socket.getsockname()[1]}')
     
     def send_calculation(self, operation: str, numbers: [int]) -> tuple[int, int]:
         # Send a calculation to the server
