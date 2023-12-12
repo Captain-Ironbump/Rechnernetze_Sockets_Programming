@@ -79,7 +79,7 @@ class CalculatorServer:
             result = self.calculate(data)
             self.udp_socket.sendto(result, addr)
         except socket.timeout:
-            print('Socket timed out at',time.asctime())
+            print('Socket timed in handle udp out at',time.asctime())
         # self.udp_socket.close()
 
     def calculate(self, data: bytes) -> bytes:
